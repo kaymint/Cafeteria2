@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mealName"
+            android:hint="meal name"
+            android:layout_marginTop="25dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mealPrice"
+            android:hint="price"
+            android:layout_marginTop="25dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="cancel"
+                android:id="@+id/cancelMealBtn"
+                android:layout_weight="0.44" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="Add Meal"
+                android:id="@+id/addMealBtn"
+                android:layout_weight="0.53" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
