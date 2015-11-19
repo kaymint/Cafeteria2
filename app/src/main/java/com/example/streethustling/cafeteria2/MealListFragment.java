@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.support.v4.app.ListFragment;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -47,32 +45,6 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     String[] from = {"mealName","mealPrice"};
     int[] to = {R.id.mealTxt, R.id.price};
 
-    String[] myFriends = new String[] {
-            "Sunil Gupta",
-            "Abhishek Tripathi",
-            "Awadhesh Diwakar",
-            "Amit Verma",
-            "Jitendra Singh",
-            "Ravi Jhansi",
-            "Ashish Jain",
-            "Sandeep Pal",
-            "Shishir Verma",
-            "Ravi BBD"
-    };
-
-    /*Array of names*/
-    String[] names=new String[] {
-            "Sunil Gupta",
-            "Abhishek Tripathi",
-            "Awadhesh Diwakar",
-            "Amit Verma",
-            "Jitendra Singh",
-            "Ravi Jhansi",
-            "Ashish Jain",
-            "Sandeep Pal",
-            "Shishir Verma",
-            "Ravi BBD"
-    };
 
     public static MealListFragment newInstance(int sectionNumber) {
         MealListFragment fragment = new MealListFragment();
@@ -98,19 +70,41 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        getListView().setOnItemClickListener(this);
+        listView = getListView();
+        listView.setChoiceMode(listView.CHOICE_MODE_MULTIPLE);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //mCallbacks.mealChecked(position, listinfo);
+                CheckBox chk = (CheckBox) view.findViewById(R.id.notifyChk);
+                HashMap<String, String> test = listinfo.get(position);
+                String selectedMeal = test.get("mealName");
+                String mId = test.get("mealId");
+                if (!chk.isChecked()) {
+                    chk.setChecked(true);
+                    Toast.makeText(getContext(), selectedMeal + " checked", Toast.LENGTH_SHORT).show();
+                    updateMealStatus(getView(),mId, "2" );
+                } else {
+                    chk.setChecked(false);
+                    Toast.makeText(getContext(), selectedMeal + " unchecked", Toast.LENGTH_SHORT).show();
+                    updateMealStatus(getView(), mId, "1");
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mCallbacks.mealChecked(position);
-        
-        Toast toast = Toast.makeText(getContext(), position+ "", Toast.LENGTH_SHORT);
+        mCallbacks.mealChecked(position, listinfo);
+        HashMap<String, String> test = listinfo.get(position);
+        String selectedMeal = test.get("mealName");
+
+        Toast toast = Toast.makeText(getContext(), selectedMeal + "", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public interface OnMealSelectedListener{
-        public void mealChecked(int position);
+        public void mealChecked(int position, List<HashMap<String,String>> list);
     }
 
     @Override
@@ -129,9 +123,17 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
 
     public void readWebpage(View view) {
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[]{"http://cs.ashesi.edu.gh/~csashesi/class2016/kenneth-mensah/cafeteria/" +
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/kenneth-mensah/cafeteria/" +
                 "controller/meals-controller.php?cmd=1"});
     }
+
+    public void updateMealStatus(View view, String id, String status) {
+        UpdateMealStatus task = new UpdateMealStatus();
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/kenneth-mensah/cafeteria/" +
+                "controller/meals-controller.php?cmd=3&id="+id+"&status="+status});
+    }
+
+
 
     public void notify(View v){
         System.out.println("Help Me!!!");
@@ -139,10 +141,53 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     }
 
 
+    private class UpdateMealStatus extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection conn = null;
+            for (String url : urls) {
+                try {
+                    URL theUrl = new URL(url);
+
+                    conn = (HttpURLConnection) theUrl.openConnection();
+                    System.out.println(theUrl);
+
+                    InputStream content = new BufferedInputStream(conn.getInputStream());
+
+                    BufferedReader buffer = new BufferedReader(
+                            new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        System.out.println(s);
+                        response += s;
+                    }
+                    System.out.println(response);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    conn.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast toast;
+            toast = Toast.makeText(getContext(), "meal status updated", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+
 
 
     public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
-        GetMeals task;
+
 
         public static final String MEAL_NAME = "meal_name";
         public static final String MEAL_ID = "meal_id";
@@ -189,16 +234,8 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
             parseJSONLocally(result);
             SimpleAdapter sAdapter = new SimpleAdapter(getContext(), listinfo,
                     R.layout.meal_list,from, to);
+            //CustomListAdapter sAdapter = new CustomListAdapter(getActivity(),listinfo);
             listView.setAdapter(sAdapter);
-            listView.setAdapter(sAdapter);
-            listView.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    System.out.println("I am here");
-                    Toast toast = Toast.makeText(getContext(), "position: " + position, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            });
         }
 
 

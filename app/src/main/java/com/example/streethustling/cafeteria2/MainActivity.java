@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements AddMeal.AddMealListener,
         MealListFragment.OnMealSelectedListener{
 
@@ -107,8 +110,10 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
     }
 
     @Override
-    public void mealChecked(int position) {
-        Toast toast = Toast.makeText(getApplicationContext(), "position"+ position,
+    public void mealChecked(int position, List<HashMap<String,String>> list) {
+        HashMap<String, String> test = list.get(position);
+        String selectedMeal = test.get("mealName");
+        Toast toast = Toast.makeText(getApplicationContext(), "meal: "+ selectedMeal,
                 Toast.LENGTH_SHORT);
     }
 
