@@ -1,9 +1,11 @@
 package com.example.streethustling.cafeteria2;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.support.v4.app.FragmentManager;
 
 import org.json.JSONArray;
 
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 /**
  * Created by StreetHustling on 11/18/15.
  */
@@ -36,12 +40,11 @@ public class AddMeal extends Fragment implements View.OnClickListener{
     Button cancel, add;
     EditText mName, mPrice;
     String name, price;
+    AddMealListener mCallbacks;
 
     public static AddMeal newInstance(int sectionNumber) {
         AddMeal fragment = new AddMeal();
         Bundle args = new Bundle();
-        //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -71,6 +74,24 @@ public class AddMeal extends Fragment implements View.OnClickListener{
         //getListView().setOnItemClickListener(this);
     }
 
+    public interface AddMealListener{
+        public void onMealAdded();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallbacks = (AddMealListener ) context ;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
 
     public void sendMealInfo(View view) {
         AddMealTask task = new AddMealTask();
@@ -89,6 +110,7 @@ public class AddMeal extends Fragment implements View.OnClickListener{
             name = name.replace(" ", "%20");
             price = mPrice.getText().toString();
             sendMealInfo(v);
+            mCallbacks.onMealAdded();
         }
     }
 
@@ -132,6 +154,7 @@ public class AddMeal extends Fragment implements View.OnClickListener{
             Toast toast;
             toast = Toast.makeText(getContext(), "meal added", Toast.LENGTH_SHORT);
             toast.show();
+
         }
     }
 }

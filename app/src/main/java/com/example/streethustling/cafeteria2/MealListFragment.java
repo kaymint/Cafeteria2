@@ -1,6 +1,7 @@
 package com.example.streethustling.cafeteria2;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import java.util.List;
 public class MealListFragment extends ListFragment implements AdapterView.OnItemClickListener {
     ListView listView;
     CheckBox checkBox;
+    OnMealSelectedListener mCallbacks;
 
     List<HashMap<String,String>> listinfo = new ArrayList<HashMap<String,String>>();
 
@@ -102,9 +104,27 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast toast;
-        toast = Toast.makeText(getContext(), "position: " + position, Toast.LENGTH_SHORT);
-        toast.show();
+        mCallbacks.mealChecked(position);
+        
+        Toast toast = Toast.makeText(getContext(), position+ "", Toast.LENGTH_SHORT);
+    }
+
+    public interface OnMealSelectedListener{
+        public void mealChecked(int position);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallbacks = (OnMealSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnMealSelectedListener");
+        }
     }
 
     public void readWebpage(View view) {
@@ -179,7 +199,6 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
                     toast.show();
                 }
             });
-
         }
 
 
