@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class MealListFragment extends ListFragment implements AdapterView.OnItemClickListener {
     ListView listView;
-    CheckBox checkBox;
     OnMealSelectedListener mCallbacks;
 
     List<HashMap<String,String>> listinfo = new ArrayList<HashMap<String,String>>();
@@ -70,6 +69,8 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CustomListAdapter sAdapter = new CustomListAdapter(getActivity(),listinfo);
+        listView.setAdapter(sAdapter);
         listView = getListView();
         listView.setChoiceMode(listView.CHOICE_MODE_MULTIPLE);
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -138,6 +139,11 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     public void notify(View v){
         System.out.println("Help Me!!!");
 
+    }
+
+    public void showList(){
+        CustomListAdapter sAdapter = new CustomListAdapter(getActivity(),listinfo);
+        listView.setAdapter(sAdapter);
     }
 
 
@@ -232,10 +238,10 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
         @Override
         protected void onPostExecute(String result) {
             parseJSONLocally(result);
-            SimpleAdapter sAdapter = new SimpleAdapter(getContext(), listinfo,
-                    R.layout.meal_list,from, to);
-            //CustomListAdapter sAdapter = new CustomListAdapter(getActivity(),listinfo);
-            listView.setAdapter(sAdapter);
+//            SimpleAdapter sAdapter = new SimpleAdapter(getContext(), listinfo,
+//                    R.layout.meal_list,from, to);
+//            listView.setAdapter(sAdapter);
+            showList();
         }
 
 
@@ -268,5 +274,8 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
         }
 
     }
+
+
+
 
 }

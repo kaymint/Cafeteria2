@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:descendantFocusability="blocksDescendants">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dcd8d8">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="394dp"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginTop="5dp"
+            android:background="#fefefe">
+
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="53dp"
+                android:id="@+id/imageView"
+                android:src="@android:drawable/star_on"
+                android:layout_margin="10dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="105dp"
+                android:weightSum="1"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.77"
+                android:layout_marginLeft="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="MealName"
+                    android:id="@+id/orderMeal"
+                    android:textColor="#080f2b" />
+
+                <TextView
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.00"
+                    android:id="@+id/orderPrice"
+                    android:textSize="25dp"
+                    android:layout_margin="3dp"
+                    android:textColor="#301313" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Time"
+                    android:id="@+id/orderTime" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:weightSum="1">
+
+                <CheckBox
+                    android:layout_width="79dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/readyNotify"
+                    android:checked="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
