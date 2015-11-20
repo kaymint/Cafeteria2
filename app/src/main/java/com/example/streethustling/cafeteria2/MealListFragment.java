@@ -4,6 +4,7 @@ package com.example.streethustling.cafeteria2;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,13 @@ import java.util.List;
 /**
  * Created by StreetHustling on 11/18/15.
  */
-public class MealListFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class MealListFragment extends ListFragment implements AdapterView.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener{
     ListView listView;
     OnMealSelectedListener mCallbacks;
 
     List<HashMap<String,String>> listinfo = new ArrayList<HashMap<String,String>>();
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -56,13 +59,29 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        readWebpage(getView());
+        readWebpage();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.meal_list_fragment, container, false);
         listView = (ListView) view.findViewById(android.R.id.list);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout2);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        readWebpage();
+                                    }
+                                }
+        );
         return view;
     }
 
@@ -104,6 +123,11 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
         toast.show();
     }
 
+    @Override
+    public void onRefresh() {
+        readWebpage();
+    }
+
     public interface OnMealSelectedListener{
         public void mealChecked(int position, List<HashMap<String,String>> list);
     }
@@ -122,8 +146,9 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
-    public void readWebpage(View view) {
+    public void readWebpage() {
         DownloadWebPageTask task = new DownloadWebPageTask();
+        listinfo.clear();
         task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/kenneth-mensah/cafeteria/" +
                 "controller/meals-controller.php?cmd=1"});
     }
@@ -144,6 +169,7 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
     public void showList(){
         CustomListAdapter sAdapter = new CustomListAdapter(getActivity(),listinfo);
         listView.setAdapter(sAdapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
 

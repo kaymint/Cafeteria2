@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +37,11 @@ import java.util.List;
 /**
  * Created by StreetHustling on 11/19/15.
  */
-public class OrderListFragment extends ListFragment {
+public class OrderListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     ListView listView;
     List<HashMap<String,String>> orders = new ArrayList<HashMap<String,String>>();
-
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final String TAG_RESULT = "result_id";
     private static final String TAG_ORDERS = "orders";
@@ -67,10 +68,28 @@ public class OrderListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.order_list_fragment, container, false);
+        final View view = inflater.inflate(R.layout.order_list_fragment, container, false);
         listView = (ListView) view.findViewById(android.R.id.list);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        getOrderList(view);
+                                    }
+                                }
+        );
         return view;
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -101,6 +120,7 @@ public class OrderListFragment extends ListFragment {
                     Toast.makeText(getContext(), selectedMeal + " unchecked", Toast.LENGTH_SHORT).show();
                     //updateMealStatus(getView(), mId, "1");
                 }
+
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.custom_dialog);
                 dialog.setTitle("Title...");
@@ -110,7 +130,7 @@ public class OrderListFragment extends ListFragment {
                 text.setText("Customer Id: " + uId);
 
                 TextView orderId = (TextView) dialog.findViewById(R.id.pIDTxt);
-                text.setText("Purchase Id: "+ oId);
+                orderId.setText("Purchase Id: "+ oId);
 
                 Button okButton = (Button) dialog.findViewById(R.id.dischargeBtn);
                 // if button is clicked, close the custom dialog
@@ -137,7 +157,9 @@ public class OrderListFragment extends ListFragment {
     }
 
     public void getOrderList(View view) {
+
         OrderPageTask task = new OrderPageTask();
+        orders.clear();
         task.execute(new String[]{"http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/" +
                 "MWC/group_project/response.php?cmd=1"});
     }
@@ -148,6 +170,12 @@ public class OrderListFragment extends ListFragment {
         System.out.println(orders.size());
         OrderListAdapter sAdapter = new OrderListAdapter(getActivity(),orders);
         listView.setAdapter(sAdapter);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        getOrderList(getView());
     }
 
 
@@ -218,6 +246,7 @@ public class OrderListFragment extends ListFragment {
                             hm.put(TAG_DISCHARGETIME, m.getString(TAG_DISCHARGETIME));
                             hm.put(TAG_ORDERDATE, m.getString(TAG_ORDERDATE));
                             hm.put(TAG_ORDERTIME, m.getString(TAG_ORDERTIME));
+                            hm.put(TAG_ORDERID, m.getString(TAG_ORDERID));
                             orders.add(hm);
                         }
 

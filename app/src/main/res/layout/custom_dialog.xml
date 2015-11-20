@@ -5,23 +5,33 @@
     android:weightSum="1">
 
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialogIcon"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.06"
+        android:src="@drawable/covered" />
+
     <TextView
-        android:layout_width="197dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Purchase Id"
         android:id="@+id/pIDTxt"
-        android:layout_weight="0.06"
-        android:layout_marginTop="5dp" />
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Customer Id"
         android:id="@+id/cIdTxt"
-        android:layout_weight="0.06"
-        android:layout_marginTop="5dp" />
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -33,16 +43,21 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="discharge"
-            android:id="@+id/dischargeBtn"
-            android:layout_weight="0.44" />
+            android:text="cancel"
+            android:id="@+id/cancelDischargeBtn"
+            android:layout_weight="0.44"
+            android:background="#fbc02d"
+            android:layout_margin="5dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="cancel"
-            android:id="@+id/cancelDischargeBtn"
-            android:layout_weight="0.54" />
+            android:text="discharge"
+            android:id="@+id/dischargeBtn"
+            android:layout_weight="0.39"
+            android:background="#fbc02d"
+            android:layout_margin="5dp" />
+
     </LinearLayout>
 
 </LinearLayout>

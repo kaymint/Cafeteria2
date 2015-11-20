@@ -34,14 +34,18 @@
                 android:layout_height="wrap_content"
                 android:text="cancel"
                 android:id="@+id/cancelMealBtn"
-                android:layout_weight="0.44" />
+                android:layout_weight="0.44"
+                android:background="#fbc02d"
+                android:layout_margin="4sp" />
 
             <Button
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="Add Meal"
                 android:id="@+id/addMealBtn"
-                android:layout_weight="0.53" />
+                android:layout_weight="0.53"
+                android:background="#fbc02d"
+                android:layout_margin="4sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

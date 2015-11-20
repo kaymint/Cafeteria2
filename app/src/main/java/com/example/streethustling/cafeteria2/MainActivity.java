@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
             public void onClick(View view) {
                 if(!fragment.isAdded()) {
 
-                    transaction.replace(R.id.container, fragment);
+                    transaction.add(R.id.container, fragment);
                     transaction.commit();
                 }
                 else {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return 3;
         }
 
         @Override
@@ -159,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
                     return "SECTION 2";
                 case 2:
                     return "SECTION 3";
-                case 3:
-                    return "SECTION 4";
+//                case 3:
+//                    return "SECTION 4";
             }
             return null;
         }
