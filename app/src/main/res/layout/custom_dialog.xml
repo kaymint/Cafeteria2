@@ -2,7 +2,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:padding="10dp">
 
 
     <ImageView
@@ -11,7 +12,8 @@
         android:id="@+id/dialogIcon"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.06"
-        android:src="@drawable/covered" />
+        android:src="@drawable/covered"
+        android:paddingTop="5dp" />
 
     <TextView
         android:layout_width="fill_parent"
