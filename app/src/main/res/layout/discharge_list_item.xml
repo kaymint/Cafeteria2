@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dcd8d8">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="378dp"
+            android:layout_height="83dp"
+            android:weightSum="1"
+            android:background="#fefefe"
+            android:layout_marginRight="2sp"
+            android:layout_marginLeft="2sp">
+
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="53dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/covered"
+                android:layout_margin="10dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.58">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="MealName"
+                    android:id="@+id/dischargeMeal"
+                    android:textColor="#080f2b"
+                    android:textSize="16sp"
+                    android:typeface="sans"
+                    android:textStyle="bold"
+                    android:scrollHorizontally="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.00"
+                    android:id="@+id/dischargePrice"
+                    android:textSize="14sp"
+                    android:layout_margin="3dp"
+                    android:textColor="#301313"
+                    android:layout_marginTop="5dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:layout_weight="0.31">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Date"
+                    android:id="@+id/dischargeDate"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Time"
+                    android:id="@+id/dischargedTime"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

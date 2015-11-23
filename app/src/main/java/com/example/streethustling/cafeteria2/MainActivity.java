@@ -141,13 +141,13 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
             if(position == 2){
                 return MealListFragment.newInstance(position + 1);
             }
-            return PlaceholderFragment.newInstance(position + 1);
+            return DischargedListFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -159,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
                     return "SECTION 2";
                 case 2:
                     return "SECTION 3";
-//                case 3:
-//                    return "SECTION 4";
+                case 3:
+                    return "SECTION 4";
             }
             return null;
         }
