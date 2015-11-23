@@ -2,6 +2,7 @@ package com.example.streethustling.cafeteria2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,18 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -106,17 +119,77 @@ public class OrderListAdapter extends BaseAdapter {
                     test = data.get(position);
                     String mId = test.get("order_id");
                     if(holder.readyChkBtn.isChecked()){
-                        Toast.makeText(activity, " ready", Toast.LENGTH_SHORT).show();
-
-                    }else{
-                        Toast.makeText(activity, "not ready", Toast.LENGTH_SHORT).show();
-
+                        ReadyPageTask task = new ReadyPageTask();
+                        //notify
+                        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
+                                "/MWC/group_project/response.php?cmd=3&id="+mId});
                     }
                 }
             });
 
         }
         return vi;
+    }
+
+    public class ReadyPageTask extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection conn = null;
+            for (String url : urls) {
+                try {
+                    URL theUrl = new URL(url);
+
+                    conn = (HttpURLConnection) theUrl.openConnection();
+                    System.out.println(theUrl);
+
+                    InputStream content = new BufferedInputStream(conn.getInputStream());
+
+                    BufferedReader buffer = new BufferedReader(
+                            new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        System.out.println(s);
+                        response += s;
+                    }
+                    System.out.println(response);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    conn.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            parseReadyJSON(result);
+        }
+
+        public void parseReadyJSON(String result) {
+            //notify that order is ready
+            System.out.println("inside parse local" + result);
+            if (result != null) {
+                try {
+
+                    JSONObject jsonObj = new JSONObject(result);
+
+                    String success = jsonObj.getString("result");
+                    if (success.equals("1")) {
+                        Toast.makeText(activity, "meal ready", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, "could not send notification", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

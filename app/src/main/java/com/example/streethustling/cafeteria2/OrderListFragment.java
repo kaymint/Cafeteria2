@@ -42,8 +42,9 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
     ListView listView;
     List<HashMap<String,String>> orders = new ArrayList<HashMap<String,String>>();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private OrderListAdapter sAdapter;
 
-    private static final String TAG_RESULT = "result_id";
+    private static final String TAG_RESULT = "result";
     private static final String TAG_ORDERS = "orders";
     private static final String TAG_MEALNAME = "meal_name";
     private static final String TAG_MEALPRICE = "meal_price";
@@ -63,7 +64,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        getOrderList(getView());
+        getOrderList(getView(), 1);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
                                     public void run() {
                                         swipeRefreshLayout.setRefreshing(true);
 
-                                        getOrderList(view);
+                                        getOrderList(view, 1);
                                     }
                                 }
         );
@@ -94,26 +95,21 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        OrderListAdapter sAdapter = new OrderListAdapter(getActivity(),orders);
+        sAdapter = new OrderListAdapter(getActivity(),orders);
         listView.setAdapter(sAdapter);
         listView = getListView();
         listView.setChoiceMode(listView.CHOICE_MODE_MULTIPLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 CheckBox chk = (CheckBox) view.findViewById(R.id.readyNotify);
                 HashMap<String, String> test = orders.get(position);
                 String selectedMeal = test.get(TAG_MEALNAME);
-                String oId = test.get(TAG_ORDERID);
+                final String oId = test.get(TAG_ORDERID);
                 String uId = test.get(TAG_USERID);
                 if (!chk.isChecked()) {
                     chk.setChecked(true);
-                    Toast.makeText(getContext(), selectedMeal + " checked", Toast.LENGTH_SHORT).show();
-                    //updateMealStatus(getView(),mId, "2" );
-                    // 1. Instantiate an AlertDialog.Builder with its constructor
-
-                    // custom dialog
 
                 } else {
                     chk.setChecked(false);
@@ -130,7 +126,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
                 text.setText("Customer Id: " + uId);
 
                 TextView orderId = (TextView) dialog.findViewById(R.id.pIDTxt);
-                orderId.setText("Purchase Id: "+ oId);
+                orderId.setText("Purchase Id: " + oId);
 
                 Button okButton = (Button) dialog.findViewById(R.id.dischargeBtn);
                 // if button is clicked, close the custom dialog
@@ -138,12 +134,14 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
+                        dischargeOrder(3, oId);
+                        refreshList(position);
                     }
                 });
 
                 Button cancelButton = (Button) dialog.findViewById(R.id.cancelDischargeBtn);
                 // if button is clicked, close the custom dialog
-                okButton.setOnClickListener(new View.OnClickListener() {
+                cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
@@ -156,26 +154,46 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
         });
     }
 
-    public void getOrderList(View view) {
+    public void getOrderList(View view, int asyncDescriptor) {
 
-        OrderPageTask task = new OrderPageTask();
+        OrderPageTask task = new OrderPageTask(asyncDescriptor);
         orders.clear();
-        task.execute(new String[]{"http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/" +
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison/" +
                 "MWC/group_project/response.php?cmd=1"});
+    }
+
+    public void notifyReady(int asyncDescriptor, int id){
+        OrderPageTask task = new OrderPageTask(asyncDescriptor);
+        //notify
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
+                "/MWC/group_project/response.php?cmd=3&id="+id});
+    }
+
+
+    public void dischargeOrder(int asyncDescriptor, String id){
+        OrderPageTask task = new OrderPageTask(asyncDescriptor);
+        //discharge
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
+                "/MWC/group_project/response.php?cmd=2&id="+id});
     }
 
     public void showList(){
         listView = getListView();
-        System.out.println();
         System.out.println(orders.size());
-        OrderListAdapter sAdapter = new OrderListAdapter(getActivity(),orders);
+        sAdapter = new OrderListAdapter(getActivity(),orders);
         listView.setAdapter(sAdapter);
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    public void refreshList(int position){
+        listView = getListView();
+        orders.remove(position);
+        sAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onRefresh() {
-        getOrderList(getView());
+        getOrderList(getView(), 1);
     }
 
 
@@ -183,6 +201,11 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
 
         public JSONArray orderArray;
         List<HashMap<String,String>> mealList = new ArrayList<HashMap<String,String>>();
+        public int asyncHandler;
+
+        public OrderPageTask(int asyncHandler){
+            this.asyncHandler = asyncHandler;
+        }
 
 
         @Override
@@ -218,9 +241,44 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
 
         @Override
         protected void onPostExecute(String result) {
-            parseJSONLocally(result);
-            showList();
+            switch (asyncHandler){
+                case 1:
+                    //show order list
+                    parseJSONLocally(result);
+                    showList();
+                    break;
+                case 3:
+                    parseDischargeJSON(result);
+                    break;
+
+            }
+
         }
+
+
+        public void parseDischargeJSON(String result){
+            //discharge meal
+            //notify that order is ready
+            System.out.println("inside parse local" + result);
+            if(result != null){
+                try{
+
+                    JSONObject jsonObj = new JSONObject(result);
+
+                    String success = jsonObj.getString("result");
+                    if(success.equals("1")){
+                        Toast.makeText(getContext(), "meal discharged", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(getContext(), "could not send discharge notification", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
 
 
@@ -249,6 +307,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
                             hm.put(TAG_ORDERID, m.getString(TAG_ORDERID));
                             orders.add(hm);
                         }
+                    System.out.println("order list size:"+ orders.size());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
