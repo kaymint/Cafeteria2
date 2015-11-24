@@ -53,6 +53,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
     private static final String TAG_ORDERTIME = "order_time";
     private static final String TAG_ORDERID = "order_id";
     private static final String TAG_DISCHARGETIME = "discharge_time";
+    private static final String TAG_ORDERSTATUS = "order_status";
 
 
     public static OrderListFragment newInstance(int sectionNumber) {
@@ -306,6 +307,8 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
                             hm.put(TAG_ORDERDATE, m.getString(TAG_ORDERDATE));
                             hm.put(TAG_ORDERTIME, m.getString(TAG_ORDERTIME));
                             hm.put(TAG_ORDERID, m.getString(TAG_ORDERID));
+
+                            hm.put(TAG_ORDERSTATUS, m.getString(TAG_ORDERSTATUS));
                             orders.add(hm);
                         }
                     System.out.println("order list size:"+ orders.size());

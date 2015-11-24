@@ -2,7 +2,9 @@ package com.example.streethustling.cafeteria2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +113,12 @@ public class OrderListAdapter extends BaseAdapter {
             holder.orderPrice.setText(listitem.get("meal_price"));
             holder.orderTime.setText(listitem.get("order_time"));
 
+            if(listitem.get("order_status").equals("ready")){
+                holder.readyChkBtn.setChecked(true);
+            }else {
+                holder.readyChkBtn.setChecked(false);
+            }
+
 
             holder.readyChkBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,17 +126,31 @@ public class OrderListAdapter extends BaseAdapter {
                     HashMap<String,String> test = new HashMap<String,String>();
                     test = data.get(position);
                     String mId = test.get("order_id");
+                    String meal = test.get("meal_name");
+                    String customer = test.get("user_id");
+                    String message = "Dear Customer "+ customer +"\n";
+                    message += "Order no: "+ mId +"\n";
+                    message += "Your " + meal + " is ready";
+
+
                     if(holder.readyChkBtn.isChecked()){
                         ReadyPageTask task = new ReadyPageTask();
                         //notify
                         task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
                                 "/MWC/group_project/response.php?cmd=2&id="+mId});
+
+                        sendSMS("+233260884406",message);
                     }
                 }
             });
 
         }
         return vi;
+    }
+
+    private void sendSMS(String phoneNumber, String message) {
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
 
     public class ReadyPageTask extends AsyncTask<String, Void, String> {
