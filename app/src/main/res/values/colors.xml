@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff1744</color>
+    <color name="colorPrimary">#201111</color>
     <color name="colorPrimaryDark">#d11439</color>
-    <color name="colorAccent">#fbc02d</color>
+    <color name="colorAccent">#f23535</color>
+    <color name="swipeColor">#ffc928</color>
 </resources>

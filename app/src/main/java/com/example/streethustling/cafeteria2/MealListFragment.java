@@ -68,6 +68,7 @@ public class MealListFragment extends ListFragment implements AdapterView.OnItem
         listView = (ListView) view.findViewById(android.R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout2);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.swipeColor);
 
         /**
          * Showing Swipe Refresh animation on activity create

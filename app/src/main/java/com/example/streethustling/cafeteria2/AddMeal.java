@@ -95,7 +95,7 @@ public class AddMeal extends Fragment implements View.OnClickListener{
 
     public void sendMealInfo(View view) {
         AddMealTask task = new AddMealTask();
-        task.execute(new String[]{"http://cs.ashesi.edu.gh/~csashesi/class2016/kenneth-mensah/cafeteria/controller" +
+        task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/kenneth-mensah/cafeteria/controller" +
                 "/meals-controller.php?cmd=2&name="+name+"&price="+price+"&status=1"});
     }
 

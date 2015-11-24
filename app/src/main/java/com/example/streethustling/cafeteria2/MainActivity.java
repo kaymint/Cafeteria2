@@ -1,5 +1,6 @@
 package com.example.streethustling.cafeteria2;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,44 +39,60 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private int[] tabIcons = {
+            R.drawable.covered16,
+            R.drawable.menu21,
+            R.drawable.package36,
+            R.drawable.add139
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        setupViewPager(mViewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+        setupTabIcons();
 
         final AddMeal fragment = AddMeal.newInstance(1);
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!fragment.isAdded()) {
 
-                    transaction.add(R.id.container, fragment);
-                    transaction.commit();
-                }
-                else {
-                    transaction.replace(R.id.container, mSectionsPagerAdapter.getItem(2));
-                    //transaction.commit();;
-                }
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
+    }
 
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+    }
+
+
+    private void setupViewPager(ViewPager viewPager){
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(OrderListFragment.newInstance(1), "Order");
+        adapter.addFragment(MealListFragment.newInstance(1), "Meals");
+        adapter.addFragment(DischargedListFragment.newInstance(1), "Discharged Meals");
+        adapter.addFragment(AddMeal.newInstance(1), "Add Meals");
+        viewPager.setAdapter(adapter);
     }
 
 
@@ -115,6 +133,39 @@ public class MainActivity extends AppCompatActivity implements AddMeal.AddMealLi
         String selectedMeal = test.get("mealName");
         Toast toast = Toast.makeText(getApplicationContext(), "meal: "+ selectedMeal,
                 Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * View pager adapter for
+     */
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            //return mFragmentTitleList.get(position);
+            return null;
+        }
     }
 
 

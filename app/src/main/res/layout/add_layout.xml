@@ -35,8 +35,9 @@
                 android:text="cancel"
                 android:id="@+id/cancelMealBtn"
                 android:layout_weight="0.44"
-                android:background="#fbc02d"
-                android:layout_margin="4sp" />
+                android:layout_margin="4sp"
+                android:textColor="#fbc02d"
+                android:background="#fff" />
 
             <Button
                 android:layout_width="50dp"
@@ -44,8 +45,9 @@
                 android:text="Add Meal"
                 android:id="@+id/addMealBtn"
                 android:layout_weight="0.53"
-                android:background="#fbc02d"
-                android:layout_margin="4sp" />
+                android:background="#fff"
+                android:layout_margin="4sp"
+                android:textColor="#fbc02d" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

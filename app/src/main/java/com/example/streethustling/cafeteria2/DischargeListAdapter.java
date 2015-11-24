@@ -103,11 +103,11 @@ public class DischargeListAdapter extends BaseAdapter {
             holder.dischargedPrice.setText(listitem.get("meal_price"));
             holder.dischargedDate.setText(listitem.get("order_date"));
             holder.dischargedTime.setText(listitem.get("discharge_time"));
-
-
         }
         return vi;
     }
+
+
 
 }
 

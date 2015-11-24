@@ -68,7 +68,7 @@ public class DischargedListFragment extends ListFragment implements SwipeRefresh
         listView = (ListView) view.findViewById(android.R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout3);
         swipeRefreshLayout.setOnRefreshListener(this);
-
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.swipeColor);
         /**
          * Showing Swipe Refresh animation on activity create
          * As animation won't start on onCreate, post runnable is used
@@ -160,7 +160,7 @@ public class DischargedListFragment extends ListFragment implements SwipeRefresh
 
     public void showList(){
         listView = getListView();
-        System.out.println(orders.size());
+        //System.out.println(orders.size());
         sAdapter = new DischargeListAdapter(getActivity(),orders);
         listView.setAdapter(sAdapter);
         swipeRefreshLayout.setRefreshing(false);
@@ -227,9 +227,11 @@ public class DischargedListFragment extends ListFragment implements SwipeRefresh
         }
 
 
-
-
-
+        /**
+         *
+         * @param response : takes in the
+         *
+         */
         public void parseJSONLocally(String response){
             System.out.println("inside parse local" + response);
             if(response != null){
@@ -260,12 +262,6 @@ public class DischargedListFragment extends ListFragment implements SwipeRefresh
                 }
             }
         }
-
     }
-
-
-
-
-
 }
 

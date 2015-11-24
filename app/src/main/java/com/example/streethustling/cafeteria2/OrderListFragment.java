@@ -73,6 +73,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
         listView = (ListView) view.findViewById(android.R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,R.color.swipeColor);
 
         /**
          * Showing Swipe Refresh animation on activity create
@@ -174,7 +175,7 @@ public class OrderListFragment extends ListFragment implements SwipeRefreshLayou
         OrderPageTask task = new OrderPageTask(asyncDescriptor);
         //discharge
         task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
-                "/MWC/group_project/response.php?cmd=2&id="+id});
+                "/MWC/group_project/response.php?cmd=3&id="+id});
     }
 
     public void showList(){

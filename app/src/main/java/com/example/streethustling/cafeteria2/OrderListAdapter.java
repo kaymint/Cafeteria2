@@ -122,7 +122,7 @@ public class OrderListAdapter extends BaseAdapter {
                         ReadyPageTask task = new ReadyPageTask();
                         //notify
                         task.execute(new String[]{"http://50.63.128.135/~csashesi/class2016/agatha-maison" +
-                                "/MWC/group_project/response.php?cmd=3&id="+mId});
+                                "/MWC/group_project/response.php?cmd=2&id="+mId});
                     }
                 }
             });
